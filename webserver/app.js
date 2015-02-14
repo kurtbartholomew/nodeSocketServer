@@ -8,6 +8,12 @@ var io = require('socket.io').listen(server);
 var subSocket = require('./lib/subscribe');
 var badges = require('./models/badges'); 
 
+app.use(function(request, response, next) {
+	response.setHeader('Access-Control-Allow-Origin', '*');
+	next();
+});
+
+
 server.listen(3000, function() {
 	console.log('Server is running on port %d', 3000);
 });
@@ -30,6 +36,6 @@ io.sockets.on('connection', function(socket) {
 	});
 });
 
-subSocket.on('message', function(message) {
-	io.sockets.emit('badge', message);
+subSocket.on('message', function(channel, message) {
+	io.sockets.emit('badge', JSON.parse(message));
 });

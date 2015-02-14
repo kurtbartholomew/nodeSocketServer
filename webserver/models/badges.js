@@ -8,7 +8,9 @@ var request = require('request');
  * @param  {Function}
  */
 exports.get = function(callback) {
-	request('http://localhost:8000/badges', function(err, response, body) {
-		callback(err, JSON.parse(body));
+	request('http://localhost:8000/badges', function(err, response, data) {
+		data = JSON.parse(data);
+		if(data.error) return callback(err, []);
+		callback(null, data.data);
 	});
 };
