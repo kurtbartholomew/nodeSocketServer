@@ -10,8 +10,9 @@ var model = require('../models/badges');
 exports.save = function(req, res, next) {
 	var badges = _.clone(req.body);
 	model.save(badges, function(err) {
-		if (err) return res.json({ error: true; });
+		if (err) return res.json(503, { error: true });
 		next();
+		model.trim();
 	});
 };
 
@@ -19,4 +20,9 @@ exports.save = function(req, res, next) {
  * Send badges to pub/sub socket in model
  * @return {[type]}
  */
-exports.send = function(req, res) {};
+exports.send = function(req, res, next) {
+	var badges = _.clone(req.body);
+	model.send(badges, function(err) {
+		res.json(200, { error: null });
+	});
+};
